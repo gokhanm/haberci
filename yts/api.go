@@ -6,7 +6,6 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
-    "reflect"
 )
 
 // APIEndpoint
