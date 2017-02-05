@@ -1,8 +1,15 @@
+# haberci toml config file
+
+title = "Haberci config file"
+
 [mail]
-server = 
-port = 
-username =
-password =
-from =
-to =
-subject =
+server = "mail.example.com"
+port = 587
+username = "notify@example.com"
+password = "P@ssw@rd"
+from = "notify@example.com"
+to = "name@example.com"
+subject = "Haberci Auto Message"
+
+[yts]
+pageLimit = "10"
