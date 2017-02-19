@@ -9,7 +9,7 @@ type MailConfig struct {
     Username string `toml:"username"`
     Password string `toml:"password"`
     From string     `toml:"from"`
-    To string       `toml:"to"`
+    To []string     `toml:"to"`
     Subject string  `toml:"subject"`
 }
 

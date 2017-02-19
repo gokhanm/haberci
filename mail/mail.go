@@ -9,10 +9,16 @@ import (
 func MailSend(text string) {
 
     mail_conf := toml.Mail()
+    addresses := make([]string, len(mail_conf.To))
 
     m := gomail.NewMessage()
     m.SetHeader("From", mail_conf.From)
-    m.SetHeader("To", mail_conf.To)
+
+    for i, recipient := range mail_conf.To {
+        addresses[i] = m.FormatAddress(recipient, "")
+    }
+
+    m.SetHeader("To", addresses...)
     m.SetHeader("Subject", mail_conf.Subject)
     m.SetBody("text/html", text)
 
@@ -22,5 +28,6 @@ func MailSend(text string) {
     if err := d.DialAndSend(m); err != nil {
         panic(err)
     }
+
 }
 
