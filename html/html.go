@@ -21,7 +21,7 @@ func MovieHtmlTable() string {
 <table >
 	<tbody>
 		<tr>
-			<td><img src=%s alt="" border=3 height=100 width=100></img></td>
+			<td><img src=%s alt="" border=3 height=auto width=100></img></td>
 			<td>
 				<table>
 					<tbody>
