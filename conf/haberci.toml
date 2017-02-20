@@ -8,9 +8,10 @@ port = 587
 username = "notify@example.com"
 password = "P@ssw@rd"
 from = "notify@example.com"
-# Multi recipents example [ "name@example.com", "name2@example.com" ] 
-to = [ "name@example.com" ]
-subject = "Haberci Auto Message"
 
 [yts]
+subject = "Haberci Auto Message"
+# Multi recipents example [ "name@example.com", "name2@example.com" ] 
+recipients = [ "name@example.com" ]
 pageLimit = "10"
+

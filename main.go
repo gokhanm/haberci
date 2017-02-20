@@ -28,10 +28,11 @@ func PreMovie(d []api.Movie) {
         html_table += fmt.Sprintf(body, cover, title, year, genres, rating, id, date_uploaded)
     }
 
-        html_end := html.HtmlEnd()
+    html_end := html.HtmlEnd()
+    yts := toml.Yts()
 
-        message := html_head + html_table + html_end
-        mail.MailSend(message)
+    message := html_head + html_table + html_end
+    mail.MailSend(yts.Subject, yts.Recipients, message)
 }
 
 func Movies() {
