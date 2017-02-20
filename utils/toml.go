@@ -1,6 +1,10 @@
 package toml
 
-import "github.com/BurntSushi/toml"
+import (
+    "errors"
+
+    "github.com/BurntSushi/toml"
+)
 
 
 type MailConfig struct {
@@ -29,7 +33,7 @@ func Parse() (*tConf, error) {
     var conf *tConf
 
     if _, err := toml.DecodeFile(tomlData, &conf); err != nil {
-        return nil, err
+        panic(errors.New("haberci.toml conf file not found under /etc folder"))
     }
 
     return conf, nil
