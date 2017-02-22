@@ -1,4 +1,4 @@
-package html
+package yts_html
 
 func MovieHtmlHead() string {
     head := `
