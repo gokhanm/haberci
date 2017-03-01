@@ -6,14 +6,21 @@ import (
     "haberci/utils"
 )
 
-func MailSend(subject string, recipients []string, text string) {
+func MailSend(subject string, recipients_to []string, recipients_bcc []string, text string) {
 
     mail_conf := toml.Mail()
 
     m := gomail.NewMessage()
     m.SetHeader("From", mail_conf.From)
 
-    m.SetHeader("To", recipients...)
+    if len(recipients_to) > 0 {
+        m.SetHeader("To", recipients_to...)
+    }
+
+    if len(recipients_bcc) > 0 {
+        m.SetHeader("Bcc", recipients_bcc...)
+    }
+
     m.SetHeader("Subject", subject)
     m.SetBody("text/html", text)
 

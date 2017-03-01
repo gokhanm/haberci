@@ -12,6 +12,7 @@ from = "notify@example.com"
 [yts]
 subject = "Haberci Auto Message"
 # Multi recipients example [ "name@example.com", "name2@example.com" ] 
-recipients = [ "name@example.com" ]
+to_recipients = [ "name@example.com" ]
+bcc_recipients = [ ]
 pageLimit = "10"
 

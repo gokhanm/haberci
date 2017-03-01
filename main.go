@@ -32,7 +32,7 @@ func PreMovie(d []api.Movie) {
     yts_conf := toml.Yts()
 
     message := html_head + html_table + html_end
-    mail.MailSend(yts_conf.Subject, yts_conf.Recipients, message)
+    mail.MailSend(yts_conf.Subject, yts_conf.ToRecipients, yts_conf.BccRecipients, message)
 }
 
 func Movies() {
