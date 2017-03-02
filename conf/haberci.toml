@@ -10,6 +10,7 @@ password = "P@ssw@rd"
 from = "notify@example.com"
 
 [yts]
+enabled = "yes" # Set "no" to disabled
 subject = "Haberci Auto Message"
 # Multi recipients example [ "name@example.com", "name2@example.com" ] 
 to_recipients = [ "name@example.com" ]

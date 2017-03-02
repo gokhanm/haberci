@@ -16,6 +16,7 @@ type MailConfig struct {
 }
 
 type YtsConfig struct{
+    Enabled string       `toml:enabled`
     PageLimit string    `toml:"pageLimit"`
     ToRecipients []string `toml:"to_recipients"`
     BccRecipients []string `toml:"bcc_recipients"`

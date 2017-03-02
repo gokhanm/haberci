@@ -36,9 +36,12 @@ func PreMovie(d []api.Movie) {
 }
 
 func Movies() {
-    limit := toml.Yts()
-    res, _ := api.GetNewMovies(limit.PageLimit)
-    PreMovie(res)
+    yts_conf := toml.Yts()
+
+    if yts_conf.Enabled == "yes" {
+        res, _ := api.GetNewMovies(yts_conf.PageLimit)
+        PreMovie(res)
+    }
 }
 
 func main() {
