@@ -1,12 +1,17 @@
 package main
 
 import (
+    "flag"
     "fmt"
+    "os"
+
     "haberci/yts"
     "haberci/mail"
     "haberci/utils"
     "haberci/html"
 )
+
+var version = "0.1.2"
 
 func PreMovie(d []api.Movie) {
     var html_table string
@@ -44,7 +49,38 @@ func Movies() {
     }
 }
 
+func printVersion() {
+    fmt.Printf("haberci version %v\n", version)
+}
+
+var helpMsg = `haberci = It will notify you of newly released movies or etc
+
+usage: haberci [options]
+
+options: 
+`
+
+func printHelp() {
+	fmt.Println(helpMsg)
+	flag.PrintDefaults()
+}
+
 func main() {
+    var versionFlag = flag.Bool("v", false, "output version information and exit.")
+    var helpFlag = flag.Bool("h", false, "display this help dialog")
+
+    flag.Parse()
+
+    if *versionFlag == true {
+        printVersion()
+        os.Exit(0)
+    }
+
+    if *helpFlag == true {
+        printHelp()
+        os.Exit(0)
+    }
+
     Movies()
 }
 
