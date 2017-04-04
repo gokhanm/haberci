@@ -68,6 +68,7 @@ func printHelp() {
 func main() {
     var versionFlag = flag.Bool("v", false, "output version information and exit.")
     var helpFlag = flag.Bool("h", false, "display this help dialog")
+    var confPath = flag.String("c", "/etc/haberci.toml", "config file path.")
 
     flag.Parse()
 
@@ -80,6 +81,8 @@ func main() {
         printHelp()
         os.Exit(0)
     }
+
+    toml.Load(*confPath)
 
     Movies()
 }

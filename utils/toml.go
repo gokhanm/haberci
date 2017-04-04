@@ -6,6 +6,7 @@ import (
     "github.com/BurntSushi/toml"
 )
 
+var ConfigPath string
 
 type MailConfig struct {
     Server string   `toml:"server"`
@@ -29,13 +30,15 @@ type tConf struct {
     Yts YtsConfig
 }
 
-func Parse() (*tConf, error) {
-    tomlData := "/etc/haberci.toml"
+func Load(conf string) {
+    ConfigPath = conf
+}
 
+func Parse() (*tConf, error) {
     var conf *tConf
 
-    if _, err := toml.DecodeFile(tomlData, &conf); err != nil {
-        panic(errors.New("haberci.toml conf file not found under /etc folder"))
+    if _, err := toml.DecodeFile(ConfigPath, &conf); err != nil {
+        panic(errors.New("haberci.toml conf file not found."))
     }
 
     return conf, nil
