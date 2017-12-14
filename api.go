@@ -1,4 +1,4 @@
-package api
+package main
 
 import (
 	"encoding/json"
@@ -8,8 +8,7 @@ import (
 	"net/url"
 )
 
-// APIEndpoint
-const APIEndpoint = "https://yts.ag/api/v2"
+const apiEndpoint = "https://yts.ag/api/v2"
 
 // Sort options
 const (
@@ -29,6 +28,7 @@ const (
 	OrderDesc = "desc"
 )
 
+// Movie information struct
 type Movie struct {
 	DateUploaded     string    `json:"date_uploaded"`
 	DateUploadedUnix int64     `json:"date_uploaded_unix"`
@@ -47,6 +47,7 @@ type Movie struct {
 	Year             int       `json:"year"`
 }
 
+// Torrent information struct
 type Torrent struct {
 	DateUploaded     string `json:"date_uploaded"`
 	DateUploadedUnix int64  `json:"date_uploaded_unix"`
@@ -59,11 +60,13 @@ type Torrent struct {
 	URL              string `json:"url"`
 }
 
+// Data is movie informations
 type Data struct {
 	PageNumber int     `json:"int"`
 	Movies     []Movie `json:"movies"`
 }
 
+// Result is http request status
 type Result struct {
 	Status        string `json:"status"`
 	StatusMessage string `json:"status_message"`
@@ -91,13 +94,12 @@ func getMovieList(URL string) ([]Movie, error) {
 	return result.Data.Movies, nil
 }
 
-// GetList gets a list of movies
+// GetNewMovies gets a list of movies
 func GetNewMovies(limit string) ([]Movie, error) {
 	v := url.Values{}
 	v.Set("limit", limit)
 	v.Set("sort_by", SortByDateAdded)
 	v.Set("order_by", OrderDesc)
-	URL := fmt.Sprintf("%s/list_movies.json?%s", APIEndpoint, v.Encode())
+	URL := fmt.Sprintf("%s/list_movies.json?%s", apiEndpoint, v.Encode())
 	return getMovieList(URL)
 }
-

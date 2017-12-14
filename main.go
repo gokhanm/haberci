@@ -1,56 +1,53 @@
 package main
 
 import (
-    "flag"
-    "fmt"
-    "os"
-
-    "haberci/yts"
-    "haberci/mail"
-    "haberci/utils"
-    "haberci/html"
+	"flag"
+	"fmt"
+	"log"
+	"os"
 )
 
-var version = "0.1.2"
+// Conf is global toml conf struct
+var Conf *TomlConfig
 
-func PreMovie(d []api.Movie) {
-    var html_table string
+var version = "1.0.0"
 
-    html_head := yts_html.MovieHtmlHead()
+func preMovie(d []Movie) {
+	var table string
 
-    for i := 0; i < len(d); i++ {
-        data := d[i]
+	head := MovieHtmlHead()
 
-        year := data.Year
-        title := data.Title
-        genres := data.Genres
-        rating := data.Rating
-        id := data.ImdbID
-        date_uploaded := data.DateUploaded
-        cover := data.MediumCover
+	for i := 0; i < len(d); i++ {
+		data := d[i]
 
-        body := yts_html.MovieHtmlTable()
-        html_table += fmt.Sprintf(body, cover, title, year, genres, rating, id, date_uploaded)
-    }
+		year := data.Year
+		title := data.Title
+		genres := data.Genres
+		rating := data.Rating
+		id := data.ImdbID
+		dateUploaded := data.DateUploaded
+		cover := data.MediumCover
 
-    html_end := yts_html.HtmlEnd()
-    yts_conf := toml.Yts()
+		body := MovieHtmlTable()
+		table += fmt.Sprintf(body, cover, title, year, genres, rating, id, dateUploaded)
+	}
 
-    message := html_head + html_table + html_end
-    mail.MailSend(yts_conf.Subject, yts_conf.ToRecipients, yts_conf.BccRecipients, message)
+	htmlEnd := HtmlEnd()
+
+	message := head + table + htmlEnd
+	MailSend(Conf.Yts.Subject, Conf.Yts.ToRecipients, Conf.Yts.BccRecipients, message)
 }
 
-func Movies() {
-    yts_conf := toml.Yts()
+func movie() {
 
-    if yts_conf.Enabled == "yes" {
-        res, _ := api.GetNewMovies(yts_conf.PageLimit)
-        PreMovie(res)
-    }
+	if Conf.Yts.Enabled {
+		res, _ := GetNewMovies(Conf.Yts.PageLimit)
+		preMovie(res)
+	}
 }
 
 func printVersion() {
-    fmt.Printf("haberci version %v\n", version)
+	fmt.Printf("haberci version %v\n", version)
 }
 
 var helpMsg = `haberci = It will notify you of newly released movies or etc
@@ -66,24 +63,25 @@ func printHelp() {
 }
 
 func main() {
-    var versionFlag = flag.Bool("v", false, "output version information and exit.")
-    var helpFlag = flag.Bool("h", false, "display this help dialog")
-    var confPath = flag.String("c", "/etc/haberci.toml", "config file path.")
+	var versionFlag = flag.Bool("v", false, "output version information and exit.")
+	var helpFlag = flag.Bool("h", false, "display this help dialog")
+	var confPath = flag.String("c", "/etc/haberci.toml", "config file path.")
 
-    flag.Parse()
+	flag.Parse()
 
-    if *versionFlag == true {
-        printVersion()
-        os.Exit(0)
-    }
+	if *versionFlag == true {
+		printVersion()
+		os.Exit(0)
+	}
 
-    if *helpFlag == true {
-        printHelp()
-        os.Exit(0)
-    }
+	if *helpFlag == true {
+		printHelp()
+		os.Exit(0)
+	}
 
-    toml.Load(*confPath)
+	Load(*confPath)
+	Conf, _ = Parse()
+	log.Printf("Conf: %+v", Conf)
 
-    Movies()
+	movie()
 }
-

@@ -1,7 +1,7 @@
-package yts_html
+package main
 
 func MovieHtmlHead() string {
-    head := `
+	head := `
 <!DOCTYPE html> 
 <html>
 <head>
@@ -12,12 +12,11 @@ func MovieHtmlHead() string {
         <h1>New Movies Uploaded</h1>
     </center>
 `
-    return head
+	return head
 }
 
-
 func MovieHtmlTable() string {
-    table := `
+	table := `
 <table >
 	<tbody>
 		<tr>
@@ -48,11 +47,11 @@ func MovieHtmlTable() string {
 </table>
 
 `
-    return table
+	return table
 
 }
 
 func HtmlEnd() string {
-    end := "</body> </html>"
-    return end
+	end := "</body> </html>"
+	return end
 }

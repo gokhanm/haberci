@@ -2,18 +2,18 @@
 
 title = "Haberci config file"
 
-[mail]
+[Mail]
 server = "mail.example.com"
 port = 587
 username = "notify@example.com"
 password = "P@ssw@rd"
 from = "notify@example.com"
 
-[yts]
+[Yts]
 enabled = "yes" # Set "no" to disabled
 subject = "Haberci Auto Message"
 # Multi recipients example [ "name@example.com", "name2@example.com" ] 
-to_recipients = [ "name@example.com" ]
-bcc_recipients = [ ]
+torecipients = [ "name@example.com" ]
+bccrecipients = [ ]
 pageLimit = "10"
 
