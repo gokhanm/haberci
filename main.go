@@ -3,7 +3,6 @@ package main
 import (
 	"flag"
 	"fmt"
-	"log"
 	"os"
 )
 
@@ -81,7 +80,6 @@ func main() {
 
 	Load(*confPath)
 	Conf, _ = Parse()
-	log.Printf("Conf: %+v", Conf)
 
 	movie()
 }
