@@ -1,6 +1,7 @@
 package main
 
-func MovieHtmlHead() string {
+// MovieHTMLHead html header
+func MovieHTMLHead() string {
 	head := `
 <!DOCTYPE html> 
 <html>
@@ -15,7 +16,8 @@ func MovieHtmlHead() string {
 	return head
 }
 
-func MovieHtmlTable() string {
+// MovieHTMLTable html body
+func MovieHTMLTable() string {
 	table := `
 <table >
 	<tbody>
@@ -51,7 +53,8 @@ func MovieHtmlTable() string {
 
 }
 
-func HtmlEnd() string {
+// HTMLEnd close body and html
+func HTMLEnd() string {
 	end := "</body> </html>"
 	return end
 }

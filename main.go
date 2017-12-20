@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"log"
 	"os"
 )
 
@@ -11,10 +12,26 @@ var Conf *TomlConfig
 
 var version = "1.0.0"
 
+var helpMsg = `haberci = It will notify you of newly released movies or etc
+
+usage: haberci [options]
+
+options: 
+`
+
+func printVersion() {
+	fmt.Printf("haberci version %v\n", version)
+}
+
+func printHelp() {
+	fmt.Println(helpMsg)
+	flag.PrintDefaults()
+}
+
 func preMovie(d []Movie) {
 	var table string
 
-	head := MovieHtmlHead()
+	head := MovieHTMLHead()
 
 	for i := 0; i < len(d); i++ {
 		data := d[i]
@@ -27,14 +44,25 @@ func preMovie(d []Movie) {
 		dateUploaded := data.DateUploaded
 		cover := data.MediumCover
 
-		body := MovieHtmlTable()
+		body := MovieHTMLTable()
 		table += fmt.Sprintf(body, cover, title, year, genres, rating, id, dateUploaded)
 	}
 
-	htmlEnd := HtmlEnd()
+	htmlEnd := HTMLEnd()
 
 	message := head + table + htmlEnd
-	MailSend(Conf.Yts.Subject, Conf.Yts.ToRecipients, Conf.Yts.BccRecipients, message)
+
+	mb := MailBody{
+		Subject:       Conf.Yts.Subject,
+		ToRecipients:  Conf.Yts.ToRecipients,
+		BccRecipients: Conf.Yts.BccRecipients,
+		Message:       message,
+	}
+
+	err := mb.Send()
+	if err != nil {
+		log.Printf("Mail send error: %v", err)
+	}
 }
 
 func movie() {
@@ -43,22 +71,6 @@ func movie() {
 		res, _ := GetNewMovies(Conf.Yts.PageLimit)
 		preMovie(res)
 	}
-}
-
-func printVersion() {
-	fmt.Printf("haberci version %v\n", version)
-}
-
-var helpMsg = `haberci = It will notify you of newly released movies or etc
-
-usage: haberci [options]
-
-options: 
-`
-
-func printHelp() {
-	fmt.Println(helpMsg)
-	flag.PrintDefaults()
 }
 
 func main() {

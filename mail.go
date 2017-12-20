@@ -6,28 +6,37 @@ import (
 	"gopkg.in/gomail.v2"
 )
 
-// MailSend is send mail function
-func MailSend(subject string, toRecipients []string, bccRecipients []string, text string) {
+// MailBody info
+type MailBody struct {
+	Subject       string
+	ToRecipients  []string
+	BccRecipients []string
+	Message       string
+}
+
+// Send is send mail function
+func (mb *MailBody) Send() error {
 
 	m := gomail.NewMessage()
 	m.SetHeader("From", Conf.Mail.From)
 
-	if len(toRecipients) > 0 {
-		m.SetHeader("To", toRecipients...)
+	if len(mb.ToRecipients) > 0 {
+		m.SetHeader("To", mb.ToRecipients...)
 	}
 
-	if len(bccRecipients) > 0 {
-		m.SetHeader("Bcc", bccRecipients...)
+	if len(mb.BccRecipients) > 0 {
+		m.SetHeader("Bcc", mb.BccRecipients...)
 	}
 
-	m.SetHeader("Subject", subject)
-	m.SetBody("text/html", text)
+	m.SetHeader("Subject", mb.Subject)
+	m.SetBody("text/html", mb.Message)
 
 	d := gomail.NewPlainDialer(Conf.Mail.Server, Conf.Mail.Port, Conf.Mail.Username, Conf.Mail.Password)
 	d.TLSConfig = &tls.Config{InsecureSkipVerify: true}
 
 	if err := d.DialAndSend(m); err != nil {
-		panic(err)
+		return err
 	}
 
+	return nil
 }
