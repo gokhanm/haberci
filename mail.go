@@ -34,9 +34,5 @@ func (mb *MailBody) Send() error {
 	d := gomail.NewPlainDialer(Conf.Mail.Server, Conf.Mail.Port, Conf.Mail.Username, Conf.Mail.Password)
 	d.TLSConfig = &tls.Config{InsecureSkipVerify: true}
 
-	if err := d.DialAndSend(m); err != nil {
-		return err
-	}
-
-	return nil
+	return d.DialAndSend(m)
 }

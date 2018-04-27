@@ -10,7 +10,7 @@ import (
 // Conf is global toml conf struct
 var Conf *TomlConfig
 
-var version = "1.0.0"
+var version = "1.0.2"
 
 var helpMsg = `haberci = It will notify you of newly released movies or etc
 
@@ -28,48 +28,73 @@ func printHelp() {
 	flag.PrintDefaults()
 }
 
-func preMovie(d []Movie) {
+func preMovie(d []Movie) error {
 	var table string
 
-	head := MovieHTMLHead()
+	if len(d) != 0 {
+		head := MovieHTMLHead()
 
-	for i := 0; i < len(d); i++ {
-		data := d[i]
+		for i := 0; i < len(d); i++ {
+			data := d[i]
 
-		year := data.Year
-		title := data.Title
-		genres := data.Genres
-		rating := data.Rating
-		id := data.ImdbID
-		dateUploaded := data.DateUploaded
-		cover := data.MediumCover
+			year := data.Year
+			title := data.Title
+			genres := data.Genres
+			rating := data.Rating
+			id := data.ImdbID
+			dateUploaded := data.DateUploaded
+			cover := data.MediumCover
 
-		body := MovieHTMLTable()
-		table += fmt.Sprintf(body, cover, title, year, genres, rating, id, dateUploaded)
+			body := MovieHTMLTable()
+			table += fmt.Sprintf(body, cover, title, year, genres, rating, id, dateUploaded)
+		}
+
+		htmlEnd := HTMLEnd()
+
+		message := head + table + htmlEnd
+
+		mb := MailBody{
+			Subject:       Conf.Yts.Subject,
+			BccRecipients: Conf.Yts.BccRecipients,
+			Message:       message,
+		}
+
+		err := mb.Send()
+		if err != nil {
+			return err
+		}
+
+		return nil
+	}
+	return fmt.Errorf("content not found")
+}
+
+func movie() error {
+
+	if Conf.Yts.Enabled {
+		res, err := GetNewMovies(Conf.Yts.PageLimit)
+		if err != nil {
+			return err
+		}
+		err = preMovie(res)
+		if err != nil {
+			return err
+		}
 	}
 
-	htmlEnd := HTMLEnd()
+	return nil
+}
 
-	message := head + table + htmlEnd
-
+func reportError(e string) {
 	mb := MailBody{
-		Subject:       Conf.Yts.Subject,
-		ToRecipients:  Conf.Yts.ToRecipients,
-		BccRecipients: Conf.Yts.BccRecipients,
-		Message:       message,
+		Subject:      Conf.Yts.Subject,
+		ToRecipients: Conf.Yts.ToRecipients,
+		Message:      e,
 	}
 
 	err := mb.Send()
 	if err != nil {
-		log.Printf("Mail send error: %v", err)
-	}
-}
-
-func movie() {
-
-	if Conf.Yts.Enabled {
-		res, _ := GetNewMovies(Conf.Yts.PageLimit)
-		preMovie(res)
+		log.Printf("mail sending error %v", err)
 	}
 }
 
@@ -93,5 +118,8 @@ func main() {
 	Load(*confPath)
 	Conf, _ = Parse()
 
-	movie()
+	err := movie()
+	if err != nil {
+		reportError(err.Error())
+	}
 }
